@@ -1,0 +1,10 @@
+fastapi==0.114.0
+uvicorn==0.30.6
+jinja2==3.1.4
+python-multipart==0.0.9
+httpx==0.27.2
+selectolax==0.3.21
+trafilatura==1.7.0
+chromadb==0.5.11
+openai==1.47.0
+pydantic==2.9.2
