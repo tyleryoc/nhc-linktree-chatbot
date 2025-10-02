@@ -1,0 +1,16 @@
+name: Hourly Sync
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # every hour
+  workflow_dispatch:
+
+jobs:
+  call-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hit /sync
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.SYNC_TOKEN }}" \
+            "${{ secrets.BACKEND_SYNC_URL }}/sync"
