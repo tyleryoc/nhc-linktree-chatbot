@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>New Hope Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1>New Hope Chatbot</h1>
+    <p class="sub">Answers only from links on <a href="https://linktr.ee/newhopechurchcc" target="_blank">our Linktree</a>.</p>
+
+    <div id="chat"></div>
+
+    <form id="ask-form">
+      <input id="q" type="text" placeholder="Ask a question…" required />
+      <button type="submit">Ask</button>
+    </form>
+
+    <p class="muted">Tip: try “When is the next event?” or “How do I give?”</p>
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const form = document.getElementById('ask-form');
+    const q = document.getElementById('q');
+
+    function addMsg(role, text) {
+      const div = document.createElement('div');
+      div.className = role === 'user' ? 'bubble user' : 'bubble bot';
+      div.innerHTML = text.replace(/\n/g, '<br/>');
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = q.value.trim();
+      if (!question) return;
+      addMsg('user', question);
+      q.value = '';
+      addMsg('bot', 'Thinking…');
+
+      const resp = await fetch('/ask', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ question })
+      });
+      const data = await resp.json();
+      chat.lastChild.remove(); // remove 'Thinking…'
+      addMsg('bot', data.answer || 'Sorry, I don’t have that yet.');
+    });
+  </script>
+</body>
+</html>
